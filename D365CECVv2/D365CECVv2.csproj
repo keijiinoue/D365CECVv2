@@ -1,0 +1,268 @@
+﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{66E1B295-FFCA-477C-AA3E-FE2BA3428A6F}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>D365CECVv2</RootNamespace>
+    <AssemblyName>D365CECVv2</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+    <Content Include="CV\Scripts\CV.CardControl.js.map" />
+    <Content Include="CV\Scripts\cv.cardslayout.js.map" />
+    <Content Include="CV\Scripts\cv.cardslayoutmanager.js.map" />
+    <Content Include="CV\Scripts\CV.Config.js.map" />
+    <Content Include="CV\Scripts\cv.configset.js.map" />
+    <Content Include="CV\Scripts\CV.ConnectionViewer.js.map" />
+    <Content Include="CV\Scripts\cv.connectorcontrol.js.map" />
+    <Content Include="CV\Scripts\cv.crmaccesswebapi.js.map" />
+    <Content Include="CV\Scripts\cv.crmlink.js.map" />
+    <Content Include="CV\Scripts\cv.crmrecord.js.map" />
+    <Content Include="CV\Scripts\cv.demo.js.map" />
+    <Content Include="CV\Scripts\cv.forcegraph_circleui.js.map" />
+    <Content Include="CV\Scripts\cv.forcegraph_common.js.map" />
+    <Content Include="CV\Scripts\cv.forcegraph_rectangleui.js.map" />
+    <Content Include="CV\Scripts\cv.helper.js.map" />
+    <Content Include="CV\Scripts\cv.options.js.map" />
+    <Content Include="CV\Scripts\cv.webapirecord.js.map" />
+    <Content Include="etc\CRM Solution File\D365ConnectionViewer_1_1_0_27.zip" />
+    <Content Include="etc\CRM Solution File\D365ConnectionViewer_1_1_0_27_managed.zip" />
+    <Content Include="etc\CRM Solution File\D365ConnectionViewer_1_2_0_28.zip" />
+    <Content Include="etc\CRM Solution File\D365ConnectionViewer_1_2_0_28_managed.zip" />
+    <Content Include="etc\CRM Solution File\D365ConnectionViewer_2_0_0_29.zip" />
+    <Content Include="etc\CRM Solution File\D365ConnectionViewer_2_0_0_29_managed.zip" />
+    <Content Include="etc\CRM Solution File\D365ConnectionViewer_2_0_0_30.zip" />
+    <Content Include="etc\CRM Solution File\D365ConnectionViewer_2_0_0_30_managed.zip" />
+    <Content Include="etc\Readme.mht" />
+    <Content Include="MyJavaScriptLibrary\mygenerallibrary.js.map" />
+    <Content Include="Scripts\d3\LICENSE" />
+    <Content Include="Scripts\jQueryMobile\jquery.mobile_1.4.5.min.js.map" />
+    <Content Include="Scripts\jQuery\jquery_1.9.1.min.js.map" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CV\Data\ConfigSet.xml" />
+    <Content Include="CV\demo.html" />
+    <Content Include="CV\Images\line.png" />
+    <Content Include="CV\Images\Spinner77x77.gif" />
+    <Content Include="CV\main.html" />
+    <Content Include="CV\Scripts\CV.CardControl.js" />
+    <Content Include="CV\Scripts\cv.cardslayout.js" />
+    <Content Include="CV\Scripts\cv.cardslayoutmanager.js" />
+    <Content Include="CV\Scripts\CV.Config.js" />
+    <Content Include="CV\Scripts\cv.configset.js" />
+    <Content Include="CV\Scripts\CV.ConnectionViewer.js" />
+    <Content Include="CV\Scripts\cv.connectorcontrol.js" />
+    <Content Include="CV\Scripts\cv.crmaccesswebapi.js" />
+    <Content Include="CV\Scripts\cv.crmlink.js" />
+    <Content Include="CV\Scripts\cv.crmrecord.js" />
+    <Content Include="CV\Scripts\cv.demo.js" />
+    <Content Include="CV\Scripts\CV.DemoMetadataSample.js" />
+    <Content Include="CV\Scripts\cv.forcegraph_circleui.js" />
+    <Content Include="CV\Scripts\cv.forcegraph_common.js" />
+    <Content Include="CV\Scripts\cv.forcegraph_rectangleui.js" />
+    <Content Include="CV\Scripts\cv.helper.js" />
+    <Content Include="CV\Scripts\CV.js" />
+    <Content Include="CV\Scripts\cv.options.js" />
+    <Content Include="CV\Scripts\cv.webapirecord.js" />
+    <Content Include="CV\Scripts\Sanbox_UIChange_1.js" />
+    <Content Include="CV\Scripts\Sdk.WebAPIUtil.js" />
+    <Content Include="CV\Styles\CV.css" />
+    <Content Include="etc\Readme.files\image001.png" />
+    <Content Include="etc\Readme.files\image002.png" />
+    <Content Include="etc\Readme.files\image003.png" />
+    <Content Include="etc\Readme.files\image004.png" />
+    <Content Include="etc\Readme.files\image005.png" />
+    <Content Include="etc\Readme.files\image006.png" />
+    <Content Include="etc\Readme.files\image007.png" />
+    <Content Include="etc\Readme.files\image008.png" />
+    <Content Include="etc\Readme.files\image009.png" />
+    <Content Include="etc\Readme.files\image010.png" />
+    <Content Include="etc\Readme.files\image011.png" />
+    <Content Include="etc\Readme.files\image012.png" />
+    <Content Include="etc\Readme.files\image013.png" />
+    <Content Include="etc\Readme.files\image014.png" />
+    <Content Include="etc\Readme.files\image015.png" />
+    <Content Include="etc\Readme.files\image016.png" />
+    <Content Include="etc\Readme.files\image017.png" />
+    <Content Include="etc\Readme.files\image018.png" />
+    <Content Include="etc\Readme.files\image019.png" />
+    <Content Include="etc\Readme.files\image020.png" />
+    <Content Include="etc\Readme.files\image021.png" />
+    <Content Include="etc\Readme.html" />
+    <Content Include="etc\Screen Captures\Image01.png" />
+    <Content Include="etc\Screen Captures\Image02.png" />
+    <Content Include="etc\Screen Captures\Image03.png" />
+    <Content Include="etc\Screen Captures\Image04.png" />
+    <Content Include="etc\Screen Captures\Image05.png" />
+    <Content Include="etc\Screen Captures\Image06.png" />
+    <Content Include="etc\Screen Captures\Image07.png" />
+    <Content Include="etc\Screen Captures\Image08.png" />
+    <Content Include="etc\Screen Captures\Image09.png" />
+    <Content Include="etc\Screen Captures\Image10.png" />
+    <Content Include="etc\Screen Captures\Image11.png" />
+    <Content Include="etc\Screen Captures\Image12.png" />
+    <Content Include="etc\Screen Captures\Image13.png" />
+    <Content Include="etc\Screen Captures\Image14.png" />
+    <Content Include="etc\Screen Captures\Image15.png" />
+    <Content Include="etc\Screen Captures\Image16.png" />
+    <Content Include="etc\Screen Captures\Image17.png" />
+    <Content Include="MyJavaScriptLibrary\mygenerallibrary.js" />
+    <Content Include="Scripts\d3\d3.js" />
+    <Content Include="Scripts\d3\d3.min.js" />
+    <Content Include="Scripts\jQueryMobile\jquery.mobile_1.4.5.min.js" />
+    <Content Include="Scripts\jQuery\jquery_1.9.1.min.js" />
+    <Content Include="Styles\jQueryMobile\images\ajax_loader.gif" />
+    <Content Include="Styles\jQueryMobile\jquery.mobile_1.4.5.min.css" />
+    <Content Include="Web.config" />
+    <Content Include="_imgs\CRMTile\background_white.png" />
+    <Content Include="_imgs\Navbar\ActionImgs\Account_32.png" />
+    <Content Include="_imgs\Navbar\ActionImgs\Cases_32.png" />
+    <Content Include="_imgs\Navbar\ActionImgs\Contact_32.png" />
+    <Content Include="_imgs\Navbar\ActionImgs\CustomEntity_32.png" />
+    <Content Include="_imgs\Navbar\ActionImgs\Lead_32.png" />
+    <Content Include="_imgs\Navbar\ActionImgs\Opportunity_32.png" />
+    <Content Include="_imgs\Navbar\ActionImgs\User_32.png" />
+    <Content Include="_imgs\この_imgsフォルダは単体デモ用にのみ必要.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="CV\Scripts\CV.CardControl.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.CardsLayout.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.CardsLayoutManager.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.Config.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.ConfigSet.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.ConnectionViewer.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.ConnectorControl.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.CRMAccessWebAPI.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.CRMLink.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.CRMRecord.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.Demo.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.ForceGraph_CircleUI.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.ForceGraph_Common.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.ForceGraph_RectangleUI.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.Helper.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.Options.ts" />
+    <TypeScriptCompile Include="CV\Scripts\CV.WebAPIRecord.ts" />
+    <TypeScriptCompile Include="CV\Scripts\typings\my.d3.d.ts" />
+    <TypeScriptCompile Include="CV\Scripts\typings\my.jquerymobile.d.ts" />
+    <TypeScriptCompile Include="CV\Scripts\typings\my.lib.d.ts" />
+    <TypeScriptCompile Include="CV\Scripts\typings\my.Sdk.WebAPIQuery.js.d.ts" />
+    <TypeScriptCompile Include="CV\Scripts\typings\my.Xrm.d.ts" />
+    <TypeScriptCompile Include="MyJavaScriptLibrary\MyGeneralLibrary.ts" />
+    <TypeScriptCompile Include="Scripts\typings\d3\d3.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\d3\plugins\d3.superformula.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\es6-promise\es6-promise.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquerymobile\jquerymobile.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>59553</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:57815/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

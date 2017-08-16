@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>D365ConnectionViewer</title>
+    <link href="Styles/CV.css" rel="stylesheet" />
+    <script src="../Scripts/d3/d3.min.js"></script>
+    <script src="../Scripts/jQuery/jquery_1.9.1.min.js"></script>
+    <link href="../Styles/jQueryMobile/jquery.mobile_1.4.5.min.css" rel="stylesheet" />
+    <script src="../Scripts/jQueryMobile/jquery.mobile_1.4.5.min.js"></script>
+    <script src="../../../ClientGlobalContext.js.aspx"></script>
+    <script src="Scripts/Sdk.WebAPIUtil.js"></script> 
+    <script src="Scripts/CV.js"></script>
+</head>
+<body onload="CV.ConnectionViewer.run(); CV.ConnectionViewer.bodyResized();" onresize="CV.ConnectionViewer.bodyResized();">
+    <div id="MyPage" class="forDrag" data-role="page" data-theme="a" style="overflow: hidden; width: 100%; height: 100%;">
+        <!-- カードとつながりを描画する領域と同じサイズの、キャンバスをドラッグするための領域。 -->
+        <div id="MyCanvasToDrag" style="width: 100%; height: 100%; position:absolute;"></div>
+        <!-- オプション パネル -->
+        <div data-role="panel" id="MyOptionsPanel" data-position="left" data-display="overlay" class="ui-panel ui-panel-position-left ui-panel-display-overlay ui-body-a ui-panel-animate">
+            <div class="ui-panel-inner">
+                <div>
+                    <div style="font-weight: bold; margin: 0px 0px 10px 0px;">ユーザー オプションの設定</div>
+                    <div style="font-size: 0.8em;">
+                        定義済みのコンフィグから1つ選択してください。選択したコンフィグはこのブラウザに保存されます。<br />
+                        現在と異なるコンフィグを選択するとページを再ロードします。
+                    </div>
+                    <ul id="MyListview" data-role="listview" data-inset="true"></ul>
+                    <a href="#" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-left ui-btn-inline">キャンセル</a>
+                </div>
+                <div id="MyCardsLayoutDiv" style="border-top: 2px solid #808080; padding-top: 10px; margin-top: 5px; visibility: collapse;">
+                    <div style="font-weight: bold; margin: 0px 0px 10px 0px;">カードレイアウトの管理</div>
+                    <div id="MyCardLayoutAvailableDiv" style="visibility: collapse;">
+                        <div style="font-size: 0.8em;">
+                            展開済みカードレイアウトを保存あるいは読み込みできます。
+                        </div>
+                        <p />
+                        <div style="font-size: 0.8em;">
+                            保存するカードレイアウトの説明：
+                        </div>
+                        <input id="MyCardsLayoutDescriptionInput" type="text" />
+                        <a id="MyCardsLayoutSaveButton" href="#" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-edit ui-btn-icon-left ui-btn-inline">保存</a>
+                        <div style="font-size: 0.8em;">
+                            保存されているカードレイアウト：
+                        </div>
+                        <a id="MyCardsLayoutLoadButton" href="#" data-rel="" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-search ui-btn-icon-left ui-btn-inline">読み込み</a>
+                        <ul id="MyCardsLayoutListview" data-role="listview" data-inset="true"></ul>
+                        <a id="MyCardsLayoutCancelButton" href="#" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-left ui-btn-inline" style="visibility:hidden;">キャンセル</a>
+                        <div style="font-size: 0.8em;">
+                            <a id="MyCardsLayoutRefreshLink" style="visibility: collapse; cursor: pointer;">カードレイアウトを読み込む前の初期状態に戻すにはここをクリック</a>
+                        </div>
+                    </div>
+                    <div id="MyCardLayoutUnavailableDiv" style="visibility: collapse;">
+                        <div style="font-size: 0.8em;">
+                            この機能を利用するためには、このエンティティのプロパティで「メモ (添付ファイルを含む)」がオンになっている必要があります。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- panel -->
+        <!-- 複数関係を表示する領域 -->
+        <div data-role="panel" id="MyMultipleCRMLinkPanel" data-position="right" data-display="overlay" class="ui-panel ui-panel-position-right ui-panel-display-overlay ui-body-inherit ui-panel-animate" style="width: 500px;">
+            <div class="ui-panel-inner">
+                <div style="width: 100%;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td id="MyMultipleLlinksRecordDisplayNameLeft" class="multipleLlinksRecordDisplayName" style="text-align: left;"></td>
+                            <td id="MyMultipleLlinksRecordDisplayNameRightt" class="multipleLlinksRecordDisplayName" style="text-align: right;"></td>
+                        </tr>
+                        <tr>
+                            <td id="MyMultipleLlinksEntityDisplayNameLeft" class="multipleLlinksEntityDisplayName" style="text-align: left;"></td>
+                            <td id="MyMultipleLlinksEntityDisplayNameRight" class="multipleLlinksEntityDisplayName" style="text-align: right;"></td>
+                        </tr>
+                        <tr>
+                            <td id="MyMyMultipleCRMLinkPanelAllLinks" colspan="2" style="padding: 0px 10px 0px 10px;"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div><!-- panel -->
+        <!-- カードとつながりを描画する領域 -->
+        <div id="MyCardConnectionDiv" style="pointer-events: none; margin:0px; padding:0px; left: 0px; top: 0px; position: absolute; width: 100%; height: 100%;">
+            <!-- 非同期処理中である画像を表示する領域 -->
+            <div id="MySpinnerDiv" style="pointer-events: none; margin:0px; padding:0px; left: 0px; top: 0px; position: absolute; width: 77px; height: 77px; visibility: visible;">
+                <!-- MySpinnerDiv の widthとheightとleftとtopはプログラムで動的に変更する -->
+                <img src="Images/Spinner77x77.gif" />
+            </div>
+            <!-- カードとつながりの線を描画する領域。ただし、つながりの説明文をクリックできる領域(<a>)群を格納する領域を除く。pointer-events属性の値はUI種別に合わせてプログラムで動的に変更される。 -->
+            <svg id="MySVG" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" draggable="false" pointer-events="none">
+                <defs>
+                    <circle id="MyDefCircleL" cx="0" cy="0" r="50" stroke-width="6" />
+                    <circle id="MyDefCircleM" cx="0" cy="0" r="34" stroke-width="5" />
+                    <circle id="MyDefCircleLtoM" cx="0" cy="0" r="50" stroke-width="6" />
+                    <circle id="MyDefCircleMtoL" cx="0" cy="0" r="34" stroke-width="5" />
+                    <!-- image を use に置き換える方法がわからない。xlink:href がネストするため。 -->
+                    <!-- text を use に置き換えたら、文字が表示されなかった。 -->
+                    <path id="MyDefTextPathL2" d="M -45 0 h 90 M -40 12 h 80 M -34 24 h 68" /><!-- Lサイズの2行表示用 -->
+                    <path id="MyDefTextPathL3" d="M -45 0 h 90 M -40 12 h 80 M -34 24 h 68" /><!-- Lサイズの3行表示用。Lサイズの2行表示用と同じでよい。 -->
+                    <path id="MyDefTextPathM2" d="M -24 -3 h 48 M -24 9 h 48" /><!-- Mサイズの2行表示用 -->
+                    <path id="MyDefTextPathM3" d="M -24 -12 h 48 M -29 0 h 58 M -24 12 h 48" /><!-- Mサイズの3行表示用 -->
+                    <filter id="MyDefDropShadow" width="150%" height="150%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+                        <feOffset dx="3" dy="3" result="offsetblur" />
+                        <feFlood flood-color="rgba(0,0,0,0.5)" />
+                        <feComposite in2="offsetblur" operator="in" />
+                        <feMerge>
+                            <feMergeNode />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+                <!-- キャンバス全体をドラッグ＆ドロップするマウス操作を検知するための rect CircleUI 用 -->
+                <rect id="MyDragDropRect" x="0" y="0" width="100%" height="100%" fill="#FFFFFF" />
+                <!-- キャンバス全体を実際に動かす対象 -->
+                <g id="MyDragDropG">
+                    <!-- つながりの線を描画する領域 -->
+                    <g id="MySVGLines" />
+                    <!-- つながりロールを描画する領域 -->
+                    <g id="MySVGConnectionRoles" />
+                    <!-- つながりの説明文を描画する領域 -->
+                    <g id="MySVGConnectionDescriptions" />
+                    <!-- カードを描画する領域 CircleUI 用 -->
+                    <g id="MySVGCards" />
+                </g>
+            </svg>
+            <!-- つながりの説明文をクリックできる領域(<a>)群を格納する領域 -->
+            <div id="MyConnectionMaskToClickDiv" style="pointer-events:all">
+            </div>
+
+            <!-- カードを描画する領域 RectangleUI 用 -->
+            <div id="MyCardDiv" style="pointer-events:all">
+            </div>
+        </div>
+        <!-- メッセージを表示する領域 -->
+        <div id="MyMessageDiv" class="message" style="left: 88px; top: 0px; position: absolute;"></div>
+        <!-- MyMultipleCRMLinkPanelを表示するための要素。プログラムからclick操作がなされ、当該パネルを表示する。この要素自体は非表示。 -->
+        <a href="#MyMultipleCRMLinkPanel" id="MyShowMultipleCRMLinkPanel" class="ui-link ui-btn-left ui-btn ui-icon-gear ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button" style="position: absolute; left: 100px; top: 90px; visibility: hidden;">Show a Panel</a>
+        <!-- 左上のボタン群 -->
+        <a href="#MyOptionsPanel" id="MyShowOptions" data-icon="gear" data-iconpos="notext" class="ui-link ui-btn-left ui-btn ui-icon-gear ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button" style="margin-top: 0px; top: 4px;">Show Options</a>
+        <a href="#" id="MyOpenNewWindow" data-icon="action" data-iconpos="notext" class="ui-link ui-btn-left ui-btn ui-icon-action ui-btn-icon-notext ui-shadow ui-corner-all" data-role="button" role="button" style="margin-top: 0px; top: 4px; left: 44px; visibility: hidden;" onclick="CV.ConnectionViewer.openNewWindow()">Open a New Window</a>
+        <!-- 凡例を表示する領域 -->
+        <div id="MyLegendDiv">
+            <table id="MyLegendTable"></table>
+        </div>
+    </div><!-- page -->
+</body>
+</html>

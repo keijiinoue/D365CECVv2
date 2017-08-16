@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ConfigSet>
+{
+  "ConfigArray": [
+    {
+      "ID": "Sales",
+      "Description": "営業部門向けのコンフィグです。取引先企業と取引先担当者、およびつながりレコードとして営業案件が対象です。",
+      "CardStyle": "Circle",
+      "SmallerSizeEnabled": true,
+      "CardsLayoutEnabled": true,
+      "DefaultCardsLayoutDescription": "営業部門向けのカードレイアウト",
+      "IsDefault": true,
+      "EntitiesForConnectionList": [
+        "account",
+        "contact",
+        "opportunity"
+      ],
+      "RelationshipSchemaNameList": [
+        "contact_customer_accounts",
+        "account_parent_account"
+      ]
+    },
+    {
+      "ID": "Service",
+      "Description": "サービス部門向けのコンフィグです。取引先企業、取引先担当者およびサポート案件が対象です。",
+      "CardStyle": "Circle",
+      "SmallerSizeEnabled": true,
+      "CardsLayoutEnabled": true,
+      "DefaultCardsLayoutDescription": "サービス部門向けのカードレイアウト",
+      "IsDefault": false,
+      "EntitiesForConnectionList": [
+        "account",
+        "contact",
+        "incident"
+      ],
+      "RelationshipSchemaNameList": [
+        "contact_customer_accounts",
+        "account_parent_account",
+        "incident_customer_accounts"
+      ]
+    }
+  ]
+}
+</ConfigSet>
