@@ -995,6 +995,7 @@ namespace CV {
                     var trimmedId;
                     if (idStr[0] == "{") trimmedId = idStr.substr(1, id.length - 2);
                     else if (idStr.substr(0, 3).toLowerCase() == "%7b") trimmedId = idStr.substr(3, id.length - 6);
+                    else if (idStr != null && idStr != "") trimmedId = idStr; // v9.0 for Unified Interface
                     else trimmedId = null;
 
                     return trimmedId;
