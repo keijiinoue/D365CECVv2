@@ -298,7 +298,7 @@ namespace CV {
                                     toBeReloadedSearch = "?" + paramsString;
                                 }
                                 $("#MyCardsLayoutRefreshLink").click(() => {
-                                    location.href = "main.html" + toBeReloadedSearch;
+                                    location.href = "CV.html" + toBeReloadedSearch;
                                 });
                                 $("#MyCardsLayoutRefreshLink").css("visibility", "visible");
                             }
@@ -1059,7 +1059,7 @@ namespace CV {
         static openNewWindow(): void {
             var id = CV.connectionViewer.paramGuid;
             var entityLogicalName = CV.connectionViewer.paramEntityLogicalName;
-            window.open(Xrm.Page.context.getClientUrl() + "/WebResources/" + CV.ConnectionViewer.CRM_PUBLISHER_PREFIX + "_/" + CV.ConnectionViewer.CRM_SOLUTION_NAME + "/CV/main.html?data=id%3D%7B" + id + "%7D%26typename%3D" + entityLogicalName);
+            window.open(Xrm.Page.context.getClientUrl() + "/WebResources/" + CV.ConnectionViewer.CRM_PUBLISHER_PREFIX + "_/" + CV.ConnectionViewer.CRM_SOLUTION_NAME + "/CV/CV.html?data=id%3D%7B" + id + "%7D%26typename%3D" + entityLogicalName);
         }
         /**
         * つながりビューワーの処理の起点

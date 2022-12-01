@@ -151,7 +151,7 @@
     <Content Include="CV\Data\ConfigSet.xml" />
     <Content Include="CV\demo.html" />
     <Content Include="CV\Images\line.png" />
-    <Content Include="CV\main.html" />
+    <Content Include="CV\CV.html" />
     <Content Include="CV\Scripts\CV.DemoMetadataSample.js" />
     <Content Include="CV\Styles\CV.css" />
     <None Include="etc\開発メモ.txt" />

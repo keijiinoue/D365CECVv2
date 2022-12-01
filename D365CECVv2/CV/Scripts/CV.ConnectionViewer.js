@@ -20,28 +20,28 @@
 /// <reference path="typings/my.xrm.d.ts" />
 /// <reference path="typings/my.d3.d.ts" />
 /**
-* ConnectionViewer のルートとなるモジュール。
-* Dynamics CRM のつながりデータを可視化する。
-* D3.jsのforce layoutを使用している。
-* @module
-*/
+ * ConnectionViewer のルートとなるモジュール。
+ * Dynamics CRM のつながりデータを可視化する。
+ * D3.jsのforce layoutを使用している。
+ * @module
+ */
 var CV;
-(function (CV) {
+(function(CV) {
     /**
-    * idを扱う際のprefix文字列
-    * d3で扱うidの文字列として、数字で始まってはいけない可能性あり。
-    * @constant
-    */
+     * idを扱う際のprefix文字列
+     * d3で扱うidの文字列として、数字で始まってはいけない可能性あり。
+     * @constant
+     */
     CV.IDPrefix = "id";
     /**
-    * つながりビューワーのメインクラス
-    * @class
-    */
-    var ConnectionViewer = (function () {
+     * つながりビューワーのメインクラス
+     * @class
+     */
+    var ConnectionViewer = (function() {
         /**
-        * つながりビューワーのメインクラスのコンストラクタ
-        * @constructor
-        */
+         * つながりビューワーのメインクラスのコンストラクタ
+         * @constructor
+         */
         function ConnectionViewer() {
             CV.connectionViewer = this;
             this.CRMRecordArray = [];
@@ -51,10 +51,10 @@ var CV;
             this.init();
         }
         /**
-        * HTMLのbodyがリサイズされた際に呼び出される。
-        * @function
-        */
-        ConnectionViewer.bodyResized = function () {
+         * HTMLのbodyがリサイズされた際に呼び出される。
+         * @function
+         */
+        ConnectionViewer.bodyResized = function() {
             $("#MySpinnerDiv")
                 .css("width", window.innerWidth + "px")
                 .css("height", window.innerHeight + "px")
@@ -65,10 +65,10 @@ var CV;
             }
         };
         /**
-        * コンストラクタの次に呼ばれる。各種初期処理を行う。
-        * @function
-        */
-        ConnectionViewer.prototype.init = function () {
+         * コンストラクタの次に呼ばれる。各種初期処理を行う。
+         * @function
+         */
+        ConnectionViewer.prototype.init = function() {
             var _this = this;
             try {
                 this.IS_DEMO_MODE = this.getIsDemoMode();
@@ -84,136 +84,130 @@ var CV;
                     this.paramGuid = entityLogicalNameAndGuidFromParameter.guid.toLowerCase(); // 小文字;
                     ///console.log("paramEntityLogicalName = ", this.paramEntityLogicalName, ", paramGuid = ", this.paramGuid);
                     this.crmAccess.retrieveConfigSetXmlTextDeferredized()
-                        .then(function (text) {
-                        try {
-                            CV.connectionViewer.configSet = CV.ConfigSet.parseConfigSetXmlText(text);
-                        }
-                        catch (e) {
-                            CV.Helper.addErrorMessageln("CV.ConfigSet.parseConfigSetXml()でエラーが発生しました。" + e.message + "プログラム内で用意された既定のConfigSetを利用します。 in init()");
-                            CV.connectionViewer.configSet = CV.ConfigSet.getDefaultConfigSet();
-                        }
-                        CV.connectionViewer.config = CV.Config.initConfigWithOptions(CV.connectionViewer.configSet);
-                        if (CV.connectionViewer.config.CardStyle.toString() == CV.CardStyleEnum[CV.CardStyleEnum.Circle]
-                            || CV.connectionViewer.config.CardStyle == CV.CardStyleEnum.Circle)
-                            CV.forceGraph = new CV.ForceGraph_CircleUI("#MySVGCards", "#MySVGLines", "#MySVGConnectionDescriptions", "#MySVGConnectionRoles");
-                        else if (CV.connectionViewer.config.CardStyle.toString() == CV.CardStyleEnum[CV.CardStyleEnum.Rectangle]
-                            || CV.connectionViewer.config.CardStyle == CV.CardStyleEnum.Rectangle)
-                            CV.forceGraph = new CV.ForceGraph_RectangleUI("#MyCardDiv", "#MyConnectionMaskToClickDiv");
-                        else {
-                            CV.Helper.addErrorMessageln("CV.connectionViewer.config.CardStyle が不正な値です。既定のカードスタイル 'Circle' を採用します。 in init()");
-                            CV.forceGraph = new CV.ForceGraph_CircleUI("#MySVGCards", "#MySVGLines", "#MySVGConnectionDescriptions", "#MySVGConnectionRoles");
-                        }
-                        CV.forceGraph.initCanvasToDrag();
-                        // 単体デモ モードでは、カードレイアウトの管理機能はオフにする
-                        if (_this.IS_DEMO_MODE) {
-                            ///console.log("単体デモ モードでは、カードレイアウトの管理機能はオフにする");
-                            CV.connectionViewer.config.CardsLayoutEnabled = false;
-                        }
-                        if (CV.connectionViewer.config == null)
-                            throw "CV.Config.initConfigAndOptions()でエラーが発生しました。オプションで ConfigSet を再度選択頂くことで問題が解決する可能性があります。";
-                        CV.connectionViewer.initOptionsPanel();
-                    })
+                        .then(function(text) {
+                            try {
+                                CV.connectionViewer.configSet = CV.ConfigSet.parseConfigSetXmlText(text);
+                            } catch (e) {
+                                CV.Helper.addErrorMessageln("CV.ConfigSet.parseConfigSetXml()でエラーが発生しました。" + e.message + "プログラム内で用意された既定のConfigSetを利用します。 in init()");
+                                CV.connectionViewer.configSet = CV.ConfigSet.getDefaultConfigSet();
+                            }
+                            CV.connectionViewer.config = CV.Config.initConfigWithOptions(CV.connectionViewer.configSet);
+                            if (CV.connectionViewer.config.CardStyle.toString() == CV.CardStyleEnum[CV.CardStyleEnum.Circle] ||
+                                CV.connectionViewer.config.CardStyle == CV.CardStyleEnum.Circle)
+                                CV.forceGraph = new CV.ForceGraph_CircleUI("#MySVGCards", "#MySVGLines", "#MySVGConnectionDescriptions", "#MySVGConnectionRoles");
+                            else if (CV.connectionViewer.config.CardStyle.toString() == CV.CardStyleEnum[CV.CardStyleEnum.Rectangle] ||
+                                CV.connectionViewer.config.CardStyle == CV.CardStyleEnum.Rectangle)
+                                CV.forceGraph = new CV.ForceGraph_RectangleUI("#MyCardDiv", "#MyConnectionMaskToClickDiv");
+                            else {
+                                CV.Helper.addErrorMessageln("CV.connectionViewer.config.CardStyle が不正な値です。既定のカードスタイル 'Circle' を採用します。 in init()");
+                                CV.forceGraph = new CV.ForceGraph_CircleUI("#MySVGCards", "#MySVGLines", "#MySVGConnectionDescriptions", "#MySVGConnectionRoles");
+                            }
+                            CV.forceGraph.initCanvasToDrag();
+                            // 単体デモ モードでは、カードレイアウトの管理機能はオフにする
+                            if (_this.IS_DEMO_MODE) {
+                                ///console.log("単体デモ モードでは、カードレイアウトの管理機能はオフにする");
+                                CV.connectionViewer.config.CardsLayoutEnabled = false;
+                            }
+                            if (CV.connectionViewer.config == null)
+                                throw "CV.Config.initConfigAndOptions()でエラーが発生しました。オプションで ConfigSet を再度選択頂くことで問題が解決する可能性があります。";
+                            CV.connectionViewer.initOptionsPanel();
+                        })
                         .then(this.crmAccess.initCRMAccessDeferredized)
-                        .then(function (record) {
-                        // Config の CardsLayoutEnabled をチェックし、メモ機能が有効になっているかなどをチェックして、適切な表示をする。
-                        if (CV.connectionViewer.config.CardsLayoutEnabled) {
-                            $("#MyCardsLayoutDiv").css("visibility", "visible");
-                            if (CV.connectionViewer.AnnotationRelationshipMetadataCache) {
-                                $("#MyCardLayoutAvailableDiv").css("visibility", "visible");
-                                $("#MyCardLayoutUnavailableDiv").css("visibility", "collapse");
+                        .then(function(record) {
+                            // Config の CardsLayoutEnabled をチェックし、メモ機能が有効になっているかなどをチェックして、適切な表示をする。
+                            if (CV.connectionViewer.config.CardsLayoutEnabled) {
+                                $("#MyCardsLayoutDiv").css("visibility", "visible");
+                                if (CV.connectionViewer.AnnotationRelationshipMetadataCache) {
+                                    $("#MyCardLayoutAvailableDiv").css("visibility", "visible");
+                                    $("#MyCardLayoutUnavailableDiv").css("visibility", "collapse");
+                                } else {
+                                    $("#MyCardLayoutAvailableDiv").css("visibility", "collapse"); // なぜかこれだけでは領域を占有してしまう。
+                                    $("#MyCardLayoutAvailableDiv").css("height", "0px"); // 領域を占有しないように。
+                                    $("#MyCardLayoutUnavailableDiv").css("visibility", "visible");
+                                }
                             }
-                            else {
-                                $("#MyCardLayoutAvailableDiv").css("visibility", "collapse"); // なぜかこれだけでは領域を占有してしまう。
-                                $("#MyCardLayoutAvailableDiv").css("height", "0px"); // 領域を占有しないように。
-                                $("#MyCardLayoutUnavailableDiv").css("visibility", "visible");
+                            return CV.connectionViewer.clm.initCardsLayoutReplayDeferredized(record);
+                        })
+                        .done(function(recordAndExistCardLayout) {
+                            // MyCardsLayoutRefreshLink の処理
+                            if (recordAndExistCardLayout.existCardLayout) {
+                                // フォーム内に表示している場合、location.search は以下のような値
+                                //   "?OrgLCID=1041&UserLCID=1041&id=%7b0683F907-720F-E711-80E8-480FCFF29761%7d&orgname=org34cba2f6&type=2&typename=contact"
+                                // 一方、独立したページで表示している場合、location.search は以下のような値
+                                //   "?data=id%3D%7B0683f907-720f-e711-80e8-480fcff29761%7D%26typename%3Dcontact"
+                                // どちらにも、data=というパラメータ内で渡す必要がある。
+                                var params = MyGeneralLibrary.getParams();
+                                var toBeReloadedSearch_1;
+                                if (!params["data"]) {
+                                    toBeReloadedSearch_1 = location.search;
+                                } else {
+                                    var dataParams = MyGeneralLibrary.getCRMDataParams();
+                                    delete dataParams["annotationId"]; // ここで、既存のannotationIdの要素を削除する。
+                                    var dataParamsString = MyGeneralLibrary.getParamsString(dataParams);
+                                    params["data"] = encodeURIComponent(dataParamsString);
+                                    var paramsString = MyGeneralLibrary.getParamsString(params);
+                                    toBeReloadedSearch_1 = "?" + paramsString;
+                                }
+                                $("#MyCardsLayoutRefreshLink").click(function() {
+                                    location.href = "CV.html" + toBeReloadedSearch_1;
+                                });
+                                $("#MyCardsLayoutRefreshLink").css("visibility", "visible");
                             }
-                        }
-                        return CV.connectionViewer.clm.initCardsLayoutReplayDeferredized(record);
-                    })
-                        .done(function (recordAndExistCardLayout) {
-                        // MyCardsLayoutRefreshLink の処理
-                        if (recordAndExistCardLayout.existCardLayout) {
-                            // フォーム内に表示している場合、location.search は以下のような値
-                            //   "?OrgLCID=1041&UserLCID=1041&id=%7b0683F907-720F-E711-80E8-480FCFF29761%7d&orgname=org34cba2f6&type=2&typename=contact"
-                            // 一方、独立したページで表示している場合、location.search は以下のような値
-                            //   "?data=id%3D%7B0683f907-720f-e711-80e8-480fcff29761%7D%26typename%3Dcontact"
-                            // どちらにも、data=というパラメータ内で渡す必要がある。
-                            var params = MyGeneralLibrary.getParams();
-                            var toBeReloadedSearch_1;
-                            if (!params["data"]) {
-                                toBeReloadedSearch_1 = location.search;
-                            }
-                            else {
-                                var dataParams = MyGeneralLibrary.getCRMDataParams();
-                                delete dataParams["annotationId"]; // ここで、既存のannotationIdの要素を削除する。
-                                var dataParamsString = MyGeneralLibrary.getParamsString(dataParams);
-                                params["data"] = encodeURIComponent(dataParamsString);
-                                var paramsString = MyGeneralLibrary.getParamsString(params);
-                                toBeReloadedSearch_1 = "?" + paramsString;
-                            }
-                            $("#MyCardsLayoutRefreshLink").click(function () {
-                                location.href = "main.html" + toBeReloadedSearch_1;
-                            });
-                            $("#MyCardsLayoutRefreshLink").css("visibility", "visible");
-                        }
-                        CV.connectionViewer.initialCRMRecordRetrieved(recordAndExistCardLayout.record);
-                    }).fail(function (e) {
-                        CV.Helper.addErrorMessageln(e.toString() + " in init()");
-                        ConnectionViewer.showCurrentlyRetrievingStoryboard(false);
-                    });
-                }
-                else {
+                            CV.connectionViewer.initialCRMRecordRetrieved(recordAndExistCardLayout.record);
+                        }).fail(function(e) {
+                            CV.Helper.addErrorMessageln(e.toString() + " in init()");
+                            ConnectionViewer.showCurrentlyRetrievingStoryboard(false);
+                        });
+                } else {
                     // フォームのタイプをチェック
                     var formType = void 0;
                     if (Xrm.Page.ui != null) {
                         formType = Xrm.Page.ui.getFormType();
-                    }
-                    else {
+                    } else {
                         formType = parent.Xrm.Page.ui.getFormType();
                     }
                     if (formType == 2 // Update 
-                        || formType == 3 // Read Only
-                        || formType == 4 // Disabled
+                        ||
+                        formType == 3 // Read Only
+                        ||
+                        formType == 4 // Disabled
                     ) {
                         ///console.log("initEntityLogicalNameAndGuidFromParameter()の戻り値が不正です。");
                         throw new Error("initEntityLogicalNameAndGuidFromParameter()の戻り値が不正です。");
-                    }
-                    else if (formType == 1) {
+                    } else if (formType == 1) {
                         // Create
                         CV.Helper.addInfoMessageln("新規レコード作成時には利用できません。");
                         ConnectionViewer.showCurrentlyRetrievingStoryboard(false);
-                    }
-                    else {
+                    } else {
                         throw new Error("このFormTypeでは利用できません。FormType = " + formType);
                     }
                 }
-            }
-            catch (e) {
+            } catch (e) {
                 CV.Helper.addErrorMessageln(e.message + " in init()");
                 ConnectionViewer.showCurrentlyRetrievingStoryboard(false);
             }
         };
         /**
-        * 新しいウィンドウで表示するボタンを初期化する。
-        * CRMフォーム内で実行している場合にそのボタンを表示する。
-        * @function
-        */
-        ConnectionViewer.prototype.initOpenNewWindowButton = function () {
+         * 新しいウィンドウで表示するボタンを初期化する。
+         * CRMフォーム内で実行している場合にそのボタンを表示する。
+         * @function
+         */
+        ConnectionViewer.prototype.initOpenNewWindowButton = function() {
             if (this.IS_IN_CRM_FORM)
                 $("#MyOpenNewWindow").css("visibility", "visible");
         };
         /**
-        * 単体デモ モードで実行すべきと判断したらtrueを返す。
-        * @function
-        */
-        ConnectionViewer.prototype.getIsDemoMode = function () {
-            return (typeof (Xrm) === "undefined") ? true : false;
+         * 単体デモ モードで実行すべきと判断したらtrueを返す。
+         * @function
+         */
+        ConnectionViewer.prototype.getIsDemoMode = function() {
+            return (typeof(Xrm) === "undefined") ? true : false;
         };
         /**
-        * CRMレコードのデータの取得を受けて、実際にカードやつながりの描画を開始する。
-        * @function
-        */
-        ConnectionViewer.prototype.initialCRMRecordRetrieved = function (_record) {
+         * CRMレコードのデータの取得を受けて、実際にカードやつながりの描画を開始する。
+         * @function
+         */
+        ConnectionViewer.prototype.initialCRMRecordRetrieved = function(_record) {
             ///console.log("initialCRMRecordRetrieved()開始");
             var primaryNameAttributeName = this.EntityMetadataCacheKeyIsEntityLogicalName[this.paramEntityLogicalName].PrimaryNameAttribute;
             var primaryImageAttributeName = this.EntityMetadataCacheKeyIsEntityLogicalName[this.paramEntityLogicalName].PrimaryImageAttribute;
@@ -224,9 +218,9 @@ var CV;
         };
         /**
          * URLのパラメーターから、annotationId を取得する。なければ null を返す。
-        * @function
+         * @function
          */
-        ConnectionViewer.prototype.getAnnotationIdFromParams = function () {
+        ConnectionViewer.prototype.getAnnotationIdFromParams = function() {
             var dataParams = MyGeneralLibrary.getCRMDataParams();
             var annotationId = (dataParams) ? dataParams["annotationId"] : null;
             return annotationId;
@@ -236,7 +230,7 @@ var CV;
          * なければ null を返す。
          * @param id
          */
-        ConnectionViewer.prototype.findCRMRecordById = function (id) {
+        ConnectionViewer.prototype.findCRMRecordById = function(id) {
             for (var i = 0; i < CV.connectionViewer.CRMRecordArray.length; i++) {
                 var record = CV.connectionViewer.CRMRecordArray[i];
                 if (record.Id == id)
@@ -245,28 +239,28 @@ var CV;
             return null;
         };
         /**
-        * WebページのHTMLのタイトルを初期化する。
-        * @function
-        * @param 対象となるCRMレコードの表示名
-        */
-        ConnectionViewer.prototype.initTitle = function (name) {
+         * WebページのHTMLのタイトルを初期化する。
+         * @function
+         * @param 対象となるCRMレコードの表示名
+         */
+        ConnectionViewer.prototype.initTitle = function(name) {
             $("title")[0].textContent = name + " - つながりビューワー";
         };
         /**
-        * 対象となるCRMレコードについて、
-        * 取得済みのつながりレコードおよびOneToMany関連レコードおよびManyToOne関連レコードを用いて、
-        * まだ表示していないコネクターおよび関連するカードを配置して表示する。
-        * なお、実際の表示は d3 で行う。
-        * @function
-        * @param record {CRMRecord} 対象となるCRMレコード
-        * @param connectionEntities {WebAPIRecord[]} 取得したつながりレコード群
-        * @param connectionTargetCRMEntities {WebAPIRecord[]} 取得したつながりレコード群のターゲットのCRMレコード群
-        * @param oneToManyRelationshipEntitiesDic One-To-Manyで取得したレコード群
-        * @param manyToOneRelationshipEntitiesDic Many-To-Oneで取得したレコード群
-        * @param manyToManyRelationshipEntitiesDic Many-To-Many取得した中間エンティティつながりレコード群
-        * @param manyToManyRelationshipTargetCRMEntitiesDic {} Many-To-Many取得したレコード群のターゲットのCRMレコード群を内部に持つ連想配列。キーがMayToManyレコードのID、値が対応するターゲットのCRMレコード群を表すWebAPIRecordを配列化したもの
-        */
-        ConnectionViewer.prototype.ShowCardsAndConnectors = function (record, connectionEntities, connectionTargetCRMEntities, oneToManyRelationshipEntitiesDic, manyToOneRelationshipEntitiesDic, manyToManyRelationshipEntitiesDic, manyToManyRelationshipTargetCRMEntitiesDic) {
+         * 対象となるCRMレコードについて、
+         * 取得済みのつながりレコードおよびOneToMany関連レコードおよびManyToOne関連レコードを用いて、
+         * まだ表示していないコネクターおよび関連するカードを配置して表示する。
+         * なお、実際の表示は d3 で行う。
+         * @function
+         * @param record {CRMRecord} 対象となるCRMレコード
+         * @param connectionEntities {WebAPIRecord[]} 取得したつながりレコード群
+         * @param connectionTargetCRMEntities {WebAPIRecord[]} 取得したつながりレコード群のターゲットのCRMレコード群
+         * @param oneToManyRelationshipEntitiesDic One-To-Manyで取得したレコード群
+         * @param manyToOneRelationshipEntitiesDic Many-To-Oneで取得したレコード群
+         * @param manyToManyRelationshipEntitiesDic Many-To-Many取得した中間エンティティつながりレコード群
+         * @param manyToManyRelationshipTargetCRMEntitiesDic {} Many-To-Many取得したレコード群のターゲットのCRMレコード群を内部に持つ連想配列。キーがMayToManyレコードのID、値が対応するターゲットのCRMレコード群を表すWebAPIRecordを配列化したもの
+         */
+        ConnectionViewer.prototype.ShowCardsAndConnectors = function(record, connectionEntities, connectionTargetCRMEntities, oneToManyRelationshipEntitiesDic, manyToOneRelationshipEntitiesDic, manyToManyRelationshipEntitiesDic, manyToManyRelationshipTargetCRMEntitiesDic) {
             try {
                 ///console.log("ShowCardsAndConnectors()開始");
                 var listToBeAddedByConnectionEntities = CV.CRMLink.ConvertConnectionEntitiesToCRMLinkList(record, connectionEntities, connectionTargetCRMEntities, CV.connectionViewer.EntityMetadataCacheKeyIsObjectTypeCode, this);
@@ -301,8 +295,7 @@ var CV;
                         var target;
                         if (record.Id == crmLink.CRMRecord1.Id) {
                             target = crmLink.CRMRecord2;
-                        }
-                        else {
+                        } else {
                             target = crmLink.CRMRecord1;
                         }
                         // CRMRecordArrayに既にCRMRecordが存在するかどうかをチェックする。
@@ -324,20 +317,17 @@ var CV;
                                     // リプレイ中で、保存されているカードが存在した場合
                                     var position = { x: singleCardLayout.X, y: singleCardLayout.Y };
                                     target.CreateCardControlWithDisplayName(position, singleCardLayout.Fixed);
-                                }
-                                else {
+                                } else {
                                     // リプレイ中だけれども、保存されていないカードが存在した場合。
                                     // 保存した後に追加されたレコードがある場合である。
                                     target.CreateCardControlWithDisplayName(null, false);
                                 }
-                            }
-                            else {
+                            } else {
                                 target.CreateCardControlWithDisplayName(null, false);
                             }
                             this.CheckAndUpdateLegend(target.EntityLogicalName);
                             crmLink.CreateConnector(record.Card, target.Card);
-                        }
-                        else {
+                        } else {
                             // ここは、既にCRMRecordListにキャッシュされているCRMレコードの場合。
                             // 既にコネクタが存在するかどうかを調べる。
                             var connectorWasSet = false;
@@ -359,22 +349,21 @@ var CV;
                 }
                 record.AreConnectionsRetrieved = true;
                 ///console.log("ShowCardsAndConnectors()終了");
-            }
-            catch (e) {
+            } catch (e) {
                 CV.Helper.addErrorMessageln(e.message + " in ShowCardsAndConnectors()");
             }
         };
         /**
-        * キャンバスを指定した量だけ移動する
-        */
-        ConnectionViewer.prototype.translateCanvas = function (x, y) {
+         * キャンバスを指定した量だけ移動する
+         */
+        ConnectionViewer.prototype.translateCanvas = function(x, y) {
             CV.forceGraph.setCanvasPosition(x, y);
         };
         /**
-        * 最初のカードを表示する。
-        * @function
-        */
-        ConnectionViewer.prototype.showInitialCRMRecord = function (record) {
+         * 最初のカードを表示する。
+         * @function
+         */
+        ConnectionViewer.prototype.showInitialCRMRecord = function(record) {
             if (CV.connectionViewer.IS_CardsLaout_Replaying) {
                 // リプレイ中の場合
                 var singleCardLayout = CV.connectionViewer.clm.findCardInReplaying(record.Id);
@@ -382,14 +371,12 @@ var CV;
                     // リプレイ中で、保存されているカードが存在した場合
                     var position = { x: singleCardLayout.X, y: singleCardLayout.Y };
                     record.CreateCardControlWithDisplayName(position, singleCardLayout.Fixed);
-                }
-                else {
+                } else {
                     // リプレイ中だけれども、保存されていないカードが存在した場合。
                     // 実際にどのような場合にこのようなことが起こるかは不明
                     record.CreateCardControlWithDisplayName({ x: window.innerWidth / 2, y: window.innerHeight / 2 }, true);
                 }
-            }
-            else {
+            } else {
                 record.CreateCardControlWithDisplayName({ x: window.innerWidth / 2, y: window.innerHeight / 2 }, true);
             }
             this.clm.PrimaryCRMRecord = record;
@@ -398,26 +385,26 @@ var CV;
             this.CheckAndUpdateLegend(record.EntityLogicalName);
         };
         /**
-        * 凡例部分のアイコン画像とエンティティ表示名を表示するコントロールの初期化を行う。
-        * エンティティ毎のObjectTypeCodeの情報が前もって必要である。
-        * @function
-        */
-        ConnectionViewer.prototype.initLegend = function () {
+         * 凡例部分のアイコン画像とエンティティ表示名を表示するコントロールの初期化を行う。
+         * エンティティ毎のObjectTypeCodeの情報が前もって必要である。
+         * @function
+         */
+        ConnectionViewer.prototype.initLegend = function() {
             this.legendAlreadyShownEntityLogicalNameArray = [];
         };
         /**
-        * 指定したエンティティの凡例が既に表示しているかどうかチェックして、
-        * 表示されていなければ表示する。
-        * ただし、CardsLayout のための annotation エンティティは表示しない。
-        * @function
-        * @param entityLogicalName {string} エンティティのロジカル名
-        */
-        ConnectionViewer.prototype.CheckAndUpdateLegend = function (entityLogicalName) {
-            if (this.legendAlreadyShownEntityLogicalNameArray.indexOf(entityLogicalName) < 0
-                && CV.connectionViewer.EntityMetadataCacheKeyIsEntityLogicalName != null
-                && (entityLogicalName in CV.connectionViewer.EntityMetadataCacheKeyIsEntityLogicalName)
-                && CV.connectionViewer.EntityMetadataCacheKeyIsEntityLogicalName[entityLogicalName] != null
-                && entityLogicalName != "annotation") {
+         * 指定したエンティティの凡例が既に表示しているかどうかチェックして、
+         * 表示されていなければ表示する。
+         * ただし、CardsLayout のための annotation エンティティは表示しない。
+         * @function
+         * @param entityLogicalName {string} エンティティのロジカル名
+         */
+        ConnectionViewer.prototype.CheckAndUpdateLegend = function(entityLogicalName) {
+            if (this.legendAlreadyShownEntityLogicalNameArray.indexOf(entityLogicalName) < 0 &&
+                CV.connectionViewer.EntityMetadataCacheKeyIsEntityLogicalName != null &&
+                (entityLogicalName in CV.connectionViewer.EntityMetadataCacheKeyIsEntityLogicalName) &&
+                CV.connectionViewer.EntityMetadataCacheKeyIsEntityLogicalName[entityLogicalName] != null &&
+                entityLogicalName != "annotation") {
                 // アイコン画像URL
                 var objectTypeCode = CV.connectionViewer.EntityMetadataCacheKeyIsEntityLogicalName[entityLogicalName].ObjectTypeCode;
                 var entitySchemaName = CV.connectionViewer.EntityMetadataCacheKeyIsEntityLogicalName[entityLogicalName].SchemaName;
@@ -446,19 +433,19 @@ var CV;
             }
         };
         /**
-        * オプション パネルを初期化する。事前にconfigSetがCRMから取得されている必要がある。
-        * @function
-        */
-        ConnectionViewer.prototype.initOptionsPanel = function () {
+         * オプション パネルを初期化する。事前にconfigSetがCRMから取得されている必要がある。
+         * @function
+         */
+        ConnectionViewer.prototype.initOptionsPanel = function() {
             this.initConfigInOptionsPanel();
             if (!CV.connectionViewer.IS_DEMO_MODE)
                 this.initCardsLayoutInOptionPanel();
         };
         /**
-        * オプション パネルのコンフィグ部分を初期化する。事前にconfigSetがCRMから取得されている必要がある。
-        * @function
-        */
-        ConnectionViewer.prototype.initConfigInOptionsPanel = function () {
+         * オプション パネルのコンフィグ部分を初期化する。事前にconfigSetがCRMから取得されている必要がある。
+         * @function
+         */
+        ConnectionViewer.prototype.initConfigInOptionsPanel = function() {
             ///console.log("in initOptionsPanel()");
             // 今システムとして既定とみなされるコンフィグ
             var currentDefaultConfig = CV.Config.getCurrentDefaultConfig(CV.connectionViewer.configSet);
@@ -500,7 +487,7 @@ var CV;
             }
             $li.append($a);
             // tap時の挙動を定義
-            $li.bind("tap", function (event) {
+            $li.bind("tap", function(event) {
                 var CvConfigId = $(event.target).attr("data-cv-config-id");
                 if (!CvConfigId) {
                     CvConfigId = $(event.target).parents("a").attr("data-cv-config-id");
@@ -514,7 +501,7 @@ var CV;
                     // 異なる場合、ユーザーオプションをセット（ブラウザへの保存）
                     var newOption = new CV.Options(CvConfigId);
                     CV.Options.setUserOptions(newOption);
-                    setTimeout(function () { location.reload(); }, 200); // 少しだけ間をおいてリロードする。気持ちいい間。
+                    setTimeout(function() { location.reload(); }, 200); // 少しだけ間をおいてリロードする。気持ちいい間。
                 }
                 $('#MyOptionsPanel').panel('close');
             });
@@ -590,7 +577,7 @@ var CV;
                 }
                 $li.append($a);
                 // tap時の挙動を定義
-                $li.bind("tap", function (event) {
+                $li.bind("tap", function(event) {
                     var CvConfigId = $(event.target).attr("data-cv-config-id");
                     if (!CvConfigId) {
                         CvConfigId = $(event.target).parents("a").attr("data-cv-config-id");
@@ -604,7 +591,7 @@ var CV;
                         // 異なる場合、ユーザーオプションをセット（ブラウザへの保存）
                         var newOption = new CV.Options(CvConfigId);
                         CV.Options.setUserOptions(newOption);
-                        setTimeout(function () { location.reload(); }, 200); // 少しだけ間をおいてリロードする。気持ちいい間。
+                        setTimeout(function() { location.reload(); }, 200); // 少しだけ間をおいてリロードする。気持ちいい間。
                     }
                     $('#MyOptionsPanel').panel('close');
                 });
@@ -612,39 +599,38 @@ var CV;
             }
         };
         /**
-        * オプション パネルの展開されたカードレイアウト部分を初期化する。
-        * 対象となっているエンティティで、メモ機能が有効になっていない場合には、カードレイアウト機能は利用できない。
-        * 後にinit()内でメモ機能が有効になっていることを判断して表示するようにする。
-        * @function
-        */
-        ConnectionViewer.prototype.initCardsLayoutInOptionPanel = function () {
+         * オプション パネルの展開されたカードレイアウト部分を初期化する。
+         * 対象となっているエンティティで、メモ機能が有効になっていない場合には、カードレイアウト機能は利用できない。
+         * 後にinit()内でメモ機能が有効になっていることを判断して表示するようにする。
+         * @function
+         */
+        ConnectionViewer.prototype.initCardsLayoutInOptionPanel = function() {
             // ここでメモ機能が有効になっているかをチェックしたいが、この時点ではそもそも読み込んでいないのでNG。何もしない。collapseのまま。
             if (CV.connectionViewer.config.CardsLayoutEnabled) {
                 $("#MyCardsLayoutDescriptionInput").val(CV.connectionViewer.config.DefaultCardsLayoutDescription);
-                $("#MyCardsLayoutSaveButton").bind("tap", function (event) {
+                $("#MyCardsLayoutSaveButton").bind("tap", function(event) {
                     CV.connectionViewer.clm.SaveCurrentCardsLayoutDeferredized($("#MyCardsLayoutDescriptionInput").val())
-                        .then(function () {
-                        CV.Helper.addMessageln("展開されたカードレイアウトのデータが保存されました。");
-                    })
-                        .fail(function (e) {
-                        CV.Helper.addErrorMessageln(e.toString() + " in initCardsLayoutInOptionPanel()");
-                    });
+                        .then(function() {
+                            CV.Helper.addMessageln("展開されたカードレイアウトのデータが保存されました。");
+                        })
+                        .fail(function(e) {
+                            CV.Helper.addErrorMessageln(e.toString() + " in initCardsLayoutInOptionPanel()");
+                        });
                 });
-                $("#MyCardsLayoutLoadButton").bind("tap", function (event) {
+                $("#MyCardsLayoutLoadButton").bind("tap", function(event) {
                     try {
                         CV.connectionViewer.clm.LoadCardsLayoutListDeferredized()
-                            .then(function (list) {
-                            $("#MyCardsLayoutListview").empty();
-                            if (list.length == 0) {
-                                var $li = $('<li/>');
-                                $li.append("一件もありません。");
-                                $("#MyCardsLayoutListview").append($li);
-                                $("#MyCardsLayoutListview").listview("refresh"); // 再描画して、縦に適切なスクロールができるようにする。
-                            }
-                            else {
-                                for (var i = 0; i < list.length; i++) {
-                                    var annotation = list[i];
-                                    /* サンプル
+                            .then(function(list) {
+                                $("#MyCardsLayoutListview").empty();
+                                if (list.length == 0) {
+                                    var $li = $('<li/>');
+                                    $li.append("一件もありません。");
+                                    $("#MyCardsLayoutListview").append($li);
+                                    $("#MyCardsLayoutListview").listview("refresh"); // 再描画して、縦に適切なスクロールができるようにする。
+                                } else {
+                                    for (var i = 0; i < list.length; i++) {
+                                        var annotation = list[i];
+                                        /* サンプル
                                     <ul id="MyCardsLayoutListview" data-role="listview" data-inset="true">
                                         <li class="ui-first-child">
                                             <a title="" class="ui-btn ui-btn-icon-right ui-icon-carat-r" id="cardslayout0" href="#" data-rel="close" data-cv-annotation-id="aaaa">
@@ -669,107 +655,105 @@ var CV;
                                         </li>
                                     </ul>
                                     */
-                                    var id = "cardslayout" + (i + 0).toString(); //HTML要素としてのid
-                                    var annotationId = annotation.Id;
-                                    var createdon = annotation.CreatedonFormattedValue;
-                                    var description = annotation.Notetext;
-                                    var createdby = annotation.CreatedbyFormattedValue;
-                                    var $li = $('<li/>');
-                                    if (i == 0)
-                                        $li.addClass("ui-first-child");
-                                    else if (i == list.length - 1)
-                                        $li.addClass("ui-last-child");
-                                    var $a = $('<a/>');
-                                    $a.addClass("ui-btn ui-btn-icon-right ui-icon-carat-r");
-                                    $a.attr("id", id);
-                                    $a.attr("data-cv-annotation-id", annotationId);
-                                    $a.attr("href", "#");
-                                    $a.attr("data-rel", "close");
-                                    $a.attr("title", description + "\n作成日時: " + createdon + "\n作成者: " + createdby);
-                                    if (description) {
-                                        var $description = $('<div/>');
-                                        $description.addClass("cardlayoutDescriptionItem");
-                                        $description.append(description);
-                                        $a.append($description);
-                                    }
-                                    if (createdon) {
-                                        var $createdon = $('<div/>');
-                                        $createdon.addClass("cardlayoutItem");
-                                        $createdon.append("作成日時: " + createdon);
-                                        $a.append($createdon);
-                                    }
-                                    if (createdby) {
-                                        var $createdby = $('<div/>');
-                                        $createdby.addClass("cardlayoutItem");
-                                        $createdby.append("作成者: " + createdby);
-                                        $a.append($createdby);
-                                    }
-                                    $li.append($a);
-                                    // tap時の挙動を定義
-                                    $li.bind("tap", function (event) {
-                                        var CvAnnotationId = $(event.target).attr("data-cv-annotation-id");
-                                        if (!CvAnnotationId) {
-                                            CvAnnotationId = $(event.target).parents("a").attr("data-cv-annotation-id");
+                                        var id = "cardslayout" + (i + 0).toString(); //HTML要素としてのid
+                                        var annotationId = annotation.Id;
+                                        var createdon = annotation.CreatedonFormattedValue;
+                                        var description = annotation.Notetext;
+                                        var createdby = annotation.CreatedbyFormattedValue;
+                                        var $li = $('<li/>');
+                                        if (i == 0)
+                                            $li.addClass("ui-first-child");
+                                        else if (i == list.length - 1)
+                                            $li.addClass("ui-last-child");
+                                        var $a = $('<a/>');
+                                        $a.addClass("ui-btn ui-btn-icon-right ui-icon-carat-r");
+                                        $a.attr("id", id);
+                                        $a.attr("data-cv-annotation-id", annotationId);
+                                        $a.attr("href", "#");
+                                        $a.attr("data-rel", "close");
+                                        $a.attr("title", description + "\n作成日時: " + createdon + "\n作成者: " + createdby);
+                                        if (description) {
+                                            var $description = $('<div/>');
+                                            $description.addClass("cardlayoutDescriptionItem");
+                                            $description.append(description);
+                                            $a.append($description);
                                         }
-                                        // パラメーターを渡してリロードする。 
-                                        setTimeout(function () {
-                                            // フォーム内に表示している場合、location.search は以下のような値
-                                            //   "?OrgLCID=1041&UserLCID=1041&id=%7b0683F907-720F-E711-80E8-480FCFF29761%7d&orgname=org34cba2f6&type=2&typename=contact"
-                                            // 一方、独立したページで表示している場合、location.search は以下のような値
-                                            //   "?data=id%3D%7B0683f907-720f-e711-80e8-480fcff29761%7D%26typename%3Dcontact"
-                                            // どちらにも、data=というパラメータ内で渡す必要がある。
-                                            var params = MyGeneralLibrary.getParams();
-                                            var annotationParam = "annotationId=" + CvAnnotationId;
-                                            var toBeReloadedSearch;
-                                            if (!params["data"]) {
-                                                toBeReloadedSearch = location.search + "&data=" + encodeURIComponent(annotationParam);
+                                        if (createdon) {
+                                            var $createdon = $('<div/>');
+                                            $createdon.addClass("cardlayoutItem");
+                                            $createdon.append("作成日時: " + createdon);
+                                            $a.append($createdon);
+                                        }
+                                        if (createdby) {
+                                            var $createdby = $('<div/>');
+                                            $createdby.addClass("cardlayoutItem");
+                                            $createdby.append("作成者: " + createdby);
+                                            $a.append($createdby);
+                                        }
+                                        $li.append($a);
+                                        // tap時の挙動を定義
+                                        $li.bind("tap", function(event) {
+                                            var CvAnnotationId = $(event.target).attr("data-cv-annotation-id");
+                                            if (!CvAnnotationId) {
+                                                CvAnnotationId = $(event.target).parents("a").attr("data-cv-annotation-id");
                                             }
-                                            else {
-                                                var dataParams = MyGeneralLibrary.getCRMDataParams();
-                                                dataParams["annotationId"] = CvAnnotationId; // ここで、既存のannotationIdの値が渡されていたとしても、上書きする。
-                                                var dataParamsString = MyGeneralLibrary.getParamsString(dataParams);
-                                                params["data"] = encodeURIComponent(dataParamsString);
-                                                var paramsString = MyGeneralLibrary.getParamsString(params);
-                                                toBeReloadedSearch = "?" + paramsString;
-                                            }
-                                            location.search = toBeReloadedSearch;
-                                        }, 200); // 少しだけ間をおいてリロードする。気持ちいい間。
-                                        $('#MyOptionsPanel').panel('close');
-                                    });
-                                    $("#MyCardsLayoutListview").append($li);
-                                    $("#MyCardsLayoutListview").listview("refresh"); // 再描画して、縦に適切なスクロールができるようにする。
+                                            // パラメーターを渡してリロードする。 
+                                            setTimeout(function() {
+                                                // フォーム内に表示している場合、location.search は以下のような値
+                                                //   "?OrgLCID=1041&UserLCID=1041&id=%7b0683F907-720F-E711-80E8-480FCFF29761%7d&orgname=org34cba2f6&type=2&typename=contact"
+                                                // 一方、独立したページで表示している場合、location.search は以下のような値
+                                                //   "?data=id%3D%7B0683f907-720f-e711-80e8-480fcff29761%7D%26typename%3Dcontact"
+                                                // どちらにも、data=というパラメータ内で渡す必要がある。
+                                                var params = MyGeneralLibrary.getParams();
+                                                var annotationParam = "annotationId=" + CvAnnotationId;
+                                                var toBeReloadedSearch;
+                                                if (!params["data"]) {
+                                                    toBeReloadedSearch = location.search + "&data=" + encodeURIComponent(annotationParam);
+                                                } else {
+                                                    var dataParams = MyGeneralLibrary.getCRMDataParams();
+                                                    dataParams["annotationId"] = CvAnnotationId; // ここで、既存のannotationIdの値が渡されていたとしても、上書きする。
+                                                    var dataParamsString = MyGeneralLibrary.getParamsString(dataParams);
+                                                    params["data"] = encodeURIComponent(dataParamsString);
+                                                    var paramsString = MyGeneralLibrary.getParamsString(params);
+                                                    toBeReloadedSearch = "?" + paramsString;
+                                                }
+                                                location.search = toBeReloadedSearch;
+                                            }, 200); // 少しだけ間をおいてリロードする。気持ちいい間。
+                                            $('#MyOptionsPanel').panel('close');
+                                        });
+                                        $("#MyCardsLayoutListview").append($li);
+                                        $("#MyCardsLayoutListview").listview("refresh"); // 再描画して、縦に適切なスクロールができるようにする。
+                                    }
                                 }
-                            }
-                            $("#MyCardsLayoutCancelButton").css("visibility", "visible");
-                        }).fail(function (e) {
-                            CV.Helper.addErrorMessageln(e.toString() + " in initCardsLayoutInOptionPanel()");
-                        });
-                    }
-                    catch (e) {
+                                $("#MyCardsLayoutCancelButton").css("visibility", "visible");
+                            }).fail(function(e) {
+                                CV.Helper.addErrorMessageln(e.toString() + " in initCardsLayoutInOptionPanel()");
+                            });
+                    } catch (e) {
                         CV.Helper.addErrorMessageln(e.toString() + " in initCardsLayoutInOptionPanel()");
                     }
                 });
             }
         };
         /**
-        * 現在 非同期処理を実行中であることを示す
-        * @function
-        * @param {boolean} show 表示する場合にはtrue、表示しない場合にはfalseを指定する。
-        */
-        ConnectionViewer.showCurrentlyRetrievingStoryboard = function (show) {
+         * 現在 非同期処理を実行中であることを示す
+         * @function
+         * @param {boolean} show 表示する場合にはtrue、表示しない場合にはfalseを指定する。
+         */
+        ConnectionViewer.showCurrentlyRetrievingStoryboard = function(show) {
             $("#MySpinnerDiv").css("visibility", show ? "visible" : "hidden");
         };
         /**
-        * このHTMLページへのパラメータから、CRMのエンティティ名（ロジカル名）とGUIDを取得する。
-        * @function
-        * @return { entityLogicalName: string; guid: string } ただし、エラーが発生したらnullを返す。
-        */
-        ConnectionViewer.prototype.getEntityLogicalNameAndGuidFromParameter = function () {
+         * このHTMLページへのパラメータから、CRMのエンティティ名（ロジカル名）とGUIDを取得する。
+         * @function
+         * @return { entityLogicalName: string; guid: string } ただし、エラーが発生したらnullを返す。
+         */
+        ConnectionViewer.prototype.getEntityLogicalNameAndGuidFromParameter = function() {
             try {
                 var id, entityName;
                 // idの文字をtrimする。
                 // CRM2015Updateまでは{D1A44731-A697-E411-80C5-00155D5CDC71}のように{}を含む。CRM2015Update1では%7bA52D1120-ECFA-E411-80DE-C4346BC520C0%7dのように%7bと%7dを含む。
-                var trim = function (idStr) {
+                var trim = function(idStr) {
                     var trimmedId;
                     if (idStr[0] == "{")
                         trimmedId = idStr.substr(1, id.length - 2);
@@ -785,8 +769,7 @@ var CV;
                     // entityName = primaryRecord.getEntityLogicalName(CV.connectionViewer); これは動作しない。エンティティメタデータを取得する前だから。
                     id = CV.Demo_Data.getEntityLogicalNameAndGuidFromParameter().guid;
                     entityName = CV.Demo_Data.getEntityLogicalNameAndGuidFromParameter().entityLogicalName;
-                }
-                else {
+                } else {
                     // CRMフォーム内で有効
                     var params = MyGeneralLibrary.getParams();
                     id = params["id"]; // CRM2015Updateまでは{D1A44731-A697-E411-80C5-00155D5CDC71}のように{}を含む。CRM2015Update1では%7bA52D1120-ECFA-E411-80DE-C4346BC520C0%7dのように%7bと%7dを含む。
@@ -794,8 +777,7 @@ var CV;
                         this.IS_IN_CRM_FORM = true;
                         id = trim(id);
                         entityName = params["typename"];
-                    }
-                    else {
+                    } else {
                         this.IS_IN_CRM_FORM = false;
                         // 独立したウィンドウで表示している場合に有効
                         params = MyGeneralLibrary.getCRMDataParams();
@@ -809,42 +791,41 @@ var CV;
                     entityLogicalName: entityName,
                     guid: id
                 };
-            }
-            catch (e) {
+            } catch (e) {
                 return null;
             }
         };
         /**
-        * iOSのSafariでタッチ操作するとページをスクロールしようとする挙動を止める。
-        * @function
-        */
-        ConnectionViewer.preventSafariTouchScroll = function () {
-            $("div#MyCardConnectionDiv").bind("touchstart", function () {
+         * iOSのSafariでタッチ操作するとページをスクロールしようとする挙動を止める。
+         * @function
+         */
+        ConnectionViewer.preventSafariTouchScroll = function() {
+            $("div#MyCardConnectionDiv").bind("touchstart", function() {
                 event.preventDefault();
             });
         };
         /**
-        * CRMフォーム内にiframeで埋め込むと、なぜかbodyのスタイルシートのtouch-action属性がnoneではなく、autoに変わってしまう。動的に変える関数。
-        * @function
-        */
-        ConnectionViewer.changeTouchActionStyle = function () {
+         * CRMフォーム内にiframeで埋め込むと、なぜかbodyのスタイルシートのtouch-action属性がnoneではなく、autoに変わってしまう。動的に変える関数。
+         * @function
+         */
+        ConnectionViewer.changeTouchActionStyle = function() {
             $("body").css("touch-action", "none");
             ///console.log("bodyのtouch-action: ", $("body").css("touch-action"));
         };
         /**
-        * 新しいウィンドウを開く。パラメーターは同じものを渡す。
-        * @function
-        */
-        ConnectionViewer.openNewWindow = function () {
+         * 新しいウィンドウを開く。パラメーターは同じものを渡す。
+         * @function
+         */
+        ConnectionViewer.openNewWindow = function() {
             var id = CV.connectionViewer.paramGuid;
             var entityLogicalName = CV.connectionViewer.paramEntityLogicalName;
-            window.open(Xrm.Page.context.getClientUrl() + "/WebResources/" + CV.ConnectionViewer.CRM_PUBLISHER_PREFIX + "_/" + CV.ConnectionViewer.CRM_SOLUTION_NAME + "/CV/main.html?data=id%3D%7B" + id + "%7D%26typename%3D" + entityLogicalName);
+            window.open(Xrm.Page.context.getClientUrl() + "/WebResources/" + CV.ConnectionViewer.CRM_PUBLISHER_PREFIX + "_/" + CV.ConnectionViewer.CRM_SOLUTION_NAME + "/CV/CV.html?data=id%3D%7B" + id + "%7D%26typename%3D" + entityLogicalName);
         };
         /**
-        * つながりビューワーの処理の起点
-        * @function
-        */
-        ConnectionViewer.run = function () {
+         * つながりビューワーの処理の起点
+         * @function
+         */
+        ConnectionViewer.run = function() {
             new CV.ConnectionViewer();
             CV.ConnectionViewer.preventSafariTouchScroll();
             CV.ConnectionViewer.changeTouchActionStyle();
@@ -852,23 +833,23 @@ var CV;
         return ConnectionViewer;
     }());
     /**
-    * Dynamics CRMのソリューションの発行者の接頭辞
-    * @constant
-    */
+     * Dynamics CRMのソリューションの発行者の接頭辞
+     * @constant
+     */
     ConnectionViewer.CRM_PUBLISHER_PREFIX = "mskksamp";
     /**
-    * Dynamics CRMのソリューションの名前
-    * @constant
-    */
+     * Dynamics CRMのソリューションの名前
+     * @constant
+     */
     ConnectionViewer.CRM_SOLUTION_NAME = "D365ConnectionViewer";
     /**
-    * カード間の距離
-    * @constant
-    */
+     * カード間の距離
+     * @constant
+     */
     ConnectionViewer.CARD_DISTANCE = 180;
     /**
-    * 現在、キャンバスをドラッグ中であるかどうか
-    */
+     * 現在、キャンバスをドラッグ中であるかどうか
+     */
     ConnectionViewer.isNowDragging = false;
     CV.ConnectionViewer = ConnectionViewer;
 })(CV || (CV = {}));
